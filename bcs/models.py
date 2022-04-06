@@ -114,7 +114,7 @@ class Employee(models.Model):
 
 class ProjectAssignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ManyToManyField(Employee)
     project_schedule_task = models.ForeignKey(ProjectSchedule, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_created=True)
