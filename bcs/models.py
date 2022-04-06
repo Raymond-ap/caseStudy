@@ -49,10 +49,14 @@ class Skill(models.Model):
     description = models.TextField()
     rate_of_pay = models.CharField(max_length=100)
     
-    # Get Employees with same skill
-    def employee(self):
-        return Employee.objects.filter(skills__skill=self.skill)
-
+    def employees(self):
+        employees_with_skill = Employee.objects.filter(skill__skill=self.skill)
+        employees_with_skill_list = []
+        for employee in employees_with_skill:
+            employees_with_skill_list.append(employee.first_name + " " + employee.last_name)
+        return ', '.join(employees_with_skill_list)
+    
+    
     def __str__(self):
         return self.skill
 
