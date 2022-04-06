@@ -6,7 +6,7 @@ from .models import *
 admin.site.site_header = "BSYSTEMS COMPUTER SOLUTIONS"
 
 class SkillAdmin(admin.ModelAdmin):     
-    list_display = ("skill", "employee")
+    list_display = ("skill", "employees")
 
 
 class ProjectAdmin(admin.ModelAdmin):
