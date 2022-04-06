@@ -88,7 +88,7 @@ class ProjectSchedule(models.Model):
     end_date = models.DateField(auto_created=True)
     
     def skills_required(self):
-        return "\n".join([str(s) for s in self.skills.all()])
+        return ", ".join([str(s) for s in self.skills.all()])
 
     def __str__(self):
         return f'PROJECT Schedule ID: {self.project.project_id}'
