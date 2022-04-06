@@ -5,7 +5,8 @@ from .models import *
 
 admin.site.site_header = "BSYSTEMS COMPUTER SOLUTIONS"
 
-class SkillAdmin(admin.ModelAdmin):     
+
+class SkillAdmin(admin.ModelAdmin):
     list_display = ("skill", "employees")
 
 
@@ -25,7 +26,8 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 
 class ProjectAssignmentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("project_task", "scheduled_start_date", "scheduled_end_date",
+                    "employees", "assginment_start_date", "assginment_end_date")
 
 
 class WorkLogAdmin(admin.ModelAdmin):
@@ -37,5 +39,5 @@ admin.site.register(Skill, SkillAdmin)
 admin.site.register(Project)
 admin.site.register(ProjectSchedule, ProjectScheduleAdmin)
 admin.site.register(Employee, EmployeeAdmin)
-admin.site.register(ProjectAssignment)
+admin.site.register(ProjectAssignment, ProjectAssignmentAdmin)
 admin.site.register(WorkLog, WorkLogAdmin)

@@ -48,15 +48,15 @@ class Skill(models.Model):
     skill = models.CharField(max_length=200, choices=VALID_SKILL)
     description = models.TextField()
     rate_of_pay = models.CharField(max_length=100)
-    
+
     def employees(self):
         employees_with_skill = Employee.objects.filter(skill__skill=self.skill)
         employees_with_skill_list = []
         for employee in employees_with_skill:
-            employees_with_skill_list.append(employee.first_name + " " + employee.last_name)
+            employees_with_skill_list.append(
+                employee.first_name + " " + employee.last_name)
         return ', '.join(employees_with_skill_list)
-    
-    
+
     def __str__(self):
         return self.skill
 
@@ -75,7 +75,6 @@ class Project(models.Model):
 
     def __str__(self):
         return f'PROJECT ID: {self.project_id}'
-    
 
 
 class ProjectSchedule(models.Model):
@@ -86,7 +85,7 @@ class ProjectSchedule(models.Model):
     number_of_employees = models.IntegerField()
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_created=True)
-    
+
     def skills_required(self):
         return ", ".join([str(s) for s in self.skills.all()])
 
@@ -105,9 +104,8 @@ class Employee(models.Model):
     region = models.CharField(max_length=50, choices=VALID_REGIONS, default=0)
 
     def skills(self):
-        return "\n".join([str(s) for s in self.skill.all()])
-    
-    
+        return ", ".join([str(s) for s in self.skill.all()])
+
     def __str__(self):
         return f'{self.first_name} {self.middle_initial}'
 
@@ -115,21 +113,44 @@ class Employee(models.Model):
 class ProjectAssignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
     employee = models.ManyToManyField(Employee)
-    project_schedule_task = models.ForeignKey(ProjectSchedule, on_delete=models.CASCADE)
+    project_schedule_task = models.ForeignKey(
+        ProjectSchedule, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_created=True)
-    
+
+    # Get project task from project_schedule_task
+    def project_task(self):
+        return self.project_schedule_task.description
+
+    # get project_schedule_task start date
+    def scheduled_start_date(self):
+        return self.project_schedule_task.start_date
+
+    # get project_schedule_task end date
+    def scheduled_end_date(self):
+        return self.project_schedule_task.end_date
+
+    def assginment_start_date(self):
+        return self.start_date
+
+    def assginment_end_date(self):
+        return self.end_date
+
+    # get employees
+    def employees(self):
+        return ", ".join([str(e) for e in self.employee.all()])
+
     def __str__(self):
-      return f'PROJECT ID: {self.project_schedule_task.task_id}'
+        return f'PROJECT ID: {self.project_schedule_task.task_id}'
 
 
 class WorkLog(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    assignment_id = models.ForeignKey(ProjectAssignment, on_delete=models.CASCADE)
+    assignment_id = models.ForeignKey(
+        ProjectAssignment, on_delete=models.CASCADE)
     total_hours = models.IntegerField()
     bill_number = models.IntegerField()
-    
-    
+
     def __str__(self) -> str:
         return f'{self.employee.first_name} {self.employee.middle_initial}'
