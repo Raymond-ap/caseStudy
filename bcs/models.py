@@ -70,10 +70,8 @@ class Skill(models.Model):
 
 class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
-    project = models.CharField(max_length=1000)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    manager = models.ForeignKey(
-        'bcs.Employee', on_delete=models.CASCADE, blank=True, null=True)
+    company = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     date_signed = models.DateField(auto_created=True)
     start_date = models.DateField(auto_now_add=True)
@@ -105,7 +103,7 @@ class ProjectSchedule(models.Model):
             raise ValueError("Employee already assigned to a project schedule")
 
     def __str__(self):
-        return f'PROJECT Schedule ID: {self.project.project_id}'
+        return f'{self.description}'
 
 
 # Employee model \\ table
@@ -127,12 +125,16 @@ class Employee(models.Model):
 
 class ProjectAssignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
-    employee = models.ManyToManyField(Employee)
+    employee = models.ManyToManyField(Employee, blank=True, null=True)
     project_schedule_task = models.ForeignKey(
         ProjectSchedule, on_delete=models.CASCADE)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_created=True)
-
+    
+    # get all skills from project_schedule_task
+    def skills (self):
+        return ", ".join([str(s) for s in self.project_schedule_task.skills.all()])
+    
     # Get project task from project_schedule_task
     def project_task(self):
         return self.project_schedule_task.description
@@ -165,7 +167,7 @@ class WorkLog(models.Model):
     assignment_id = models.ForeignKey(
         ProjectAssignment, on_delete=models.CASCADE)
     total_hours = models.IntegerField()
-    bill_number = models.IntegerField()
+    bill_number = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.employee.first_name} {self.employee.middle_initial}'
