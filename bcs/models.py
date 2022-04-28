@@ -74,7 +74,7 @@ class Project(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     manager = models.ForeignKey(
         'bcs.Employee', on_delete=models.CASCADE, blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     date_signed = models.DateField(auto_created=True)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_created=True)
@@ -87,7 +87,7 @@ class Project(models.Model):
 class ProjectSchedule(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task_id = models.AutoField(primary_key=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField('bcs.Skill')
     number_of_employees = models.IntegerField()
     start_date = models.DateField(auto_now_add=True)
