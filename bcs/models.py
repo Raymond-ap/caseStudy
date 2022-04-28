@@ -46,7 +46,7 @@ VALID_SKILL = (
 class Skill(models.Model):
     skill_id = models.AutoField(primary_key=True)
     skill = models.CharField(max_length=200, choices=VALID_SKILL)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     rate_of_pay = models.CharField(max_length=100)
 
     def employees(self):
