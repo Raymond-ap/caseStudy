@@ -57,6 +57,13 @@ class Skill(models.Model):
                 employee.first_name + " " + employee.last_name)
         return ', '.join(employees_with_skill_list)
 
+    # Prevent duplicate skills
+    def save(self, *args, **kwargs):
+        if self.skill in [skill.skill for skill in Skill.objects.all()]:
+            raise ValueError("Skill already exists")
+        else:
+            super(Skill, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.skill
 
@@ -88,6 +95,14 @@ class ProjectSchedule(models.Model):
 
     def skills_required(self):
         return ", ".join([str(s) for s in self.skills.all()])
+
+    # Only assign a project schedule to an employee if the employee is not already assigned to a project schedule
+    def assign_employee(self, employee):
+        if employee.project_schedule is None:
+            employee.project_schedule = self
+            employee.save()
+        else:
+            raise ValueError("Employee already assigned to a project schedule")
 
     def __str__(self):
         return f'PROJECT Schedule ID: {self.project.project_id}'
@@ -154,3 +169,12 @@ class WorkLog(models.Model):
 
     def __str__(self) -> str:
         return f'{self.employee.first_name} {self.employee.middle_initial}'
+
+
+class Bill(models.Model):
+    bill_id = models.AutoField(primary_key=True)
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    total_hours = models.IntegerField()
+
+    def __str__(self):
+        return f'BILL ID: {self.bill_id}'

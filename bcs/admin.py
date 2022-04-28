@@ -1,3 +1,4 @@
+from csv import list_dialects
 from dataclasses import field, fields
 from django.contrib import admin
 from .models import *
@@ -35,9 +36,13 @@ class WorkLogAdmin(admin.ModelAdmin):
                     "total_hours", "bill_number")
 
 
+class BillAdmin(admin.ModelAdmin):
+    list_display = ("bill_id", "customer_id", "total_hours")
+
 admin.site.register(Skill, SkillAdmin)
 admin.site.register(Project)
 admin.site.register(ProjectSchedule, ProjectScheduleAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(ProjectAssignment, ProjectAssignmentAdmin)
 admin.site.register(WorkLog, WorkLogAdmin)
+admin.site.register(Bill, BillAdmin)
